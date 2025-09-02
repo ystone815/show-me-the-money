@@ -1,0 +1,51 @@
+목표: OpenAPI(COM) 의 주요 조회(TR) 호출을 REST API로 점진 전환
+
+현황 요약
+- GUI 메인: `Kiwoom_ystone.py` 는 `QAxWidget("KHOPENAPI.KHOpenAPICtrl.1")` 기반
+- 주요 TR 사용:
+  - opt10001: 주식기본정보요청
+  - opt10081: 주식일봉차트조회
+  - opt90004: 시장지표(코스피/코스닥) 등
+- 참고 문서: `restapi.txt` (Kiwoom REST API)
+
+추가한 구성
+1) `RestClient.py`
+   - OAuth 토큰 발급(`/oauth2/token`, api-id: `au10001`) 및 캐시
+   - 공통 호출 메서드: api-id, URL(path), JSON body, 페이지네이션 헤더(`cont-yn`, `next-key`) 지원
+   - 매핑 활용 헬퍼: `call_by_id(api_id, mapping, body, ...)`
+
+2) `parse_restapi_doc.py`
+   - `restapi.txt`(CP949/EUC-KR)에서 `API ID`와 `URL`을 추출해 `restapi_map.json` 생성
+   - 사용 예) `python parse_restapi_doc.py` → `restapi_map.json` 생성
+
+권장 전환 절차
+1) 매핑 생성: `python parse_restapi_doc.py` 실행 → `restapi_map.json`
+2) 앱키/시크릿 설정: 환경변수에 `KIWOOM_APPKEY`, `KIWOOM_SECRETKEY`(권장) 또는 코드로 전달
+3) REST 클라이언트 준비:
+   - from RestClient import KiwoomRestClient
+   - client = KiwoomRestClient(appkey, secretkey, use_mock=False)
+4) 개별 TR 치환 (예시)
+   - opt10001(주식기본정보): REST `api-id`는 문서상 `ka10001` (URL: `/api/dostk/stkinfo`)
+     - body 파라미터는 문서의 Request 항목 참고(코드/시장/기간 등). 실제 필드명은 문서 기준으로 지정.
+     - 예: `client.call_by_id("ka10001", mapping, body={ ... })`
+   - opt10081(일봉차트): REST 문서에서 `chart` 관련 API ID/URL(`/api/dostk/chart`) 확인 후 동일 패턴 적용
+5) 이벤트/실시간
+   - OpenAPI의 `OnReceiveRealData`는 REST 문서의 `/api/dostk/websocket`(또는 REAL 등록 API)로 대체
+   - 우선 조회성 TR부터 REST 전환 → 이후 실시간 구독(웹소켓) 적용 권장
+
+설계 제안 (점진적 치환)
+- 데이터 공급자 추상화 계층을 도입(예: DataProvider 인터페이스)
+  - OpenAPIProvider: 기존 QAxWidget 경로 유지
+  - RestProvider: `KiwoomRestClient`로 구현, 동일 기능 단위로 치환
+- UI/비즈니스 로직은 Provider에 의존하도록 수정(핵심 화면을 크게 바꾸지 않고 백엔드만 교체 가능)
+
+주의/팁
+- REST는 호출 제한/페이지네이션(`cont-yn`, `next-key`) 존재 → 반복 호출 로직 필요
+- 모의/실서버 분기: `use_mock=True` 시 mock URL(`https://mockapi.kiwoom.com`) 사용
+- 오류 메시지 레퍼런스: `restapi.txt` 하단 에러코드 섹션 참고
+
+다음 작업 후보
+- RestProvider 스켈레톤 추가 및 `opt10001`, `opt10081` 대응 메서드부터 연결
+- 간단한 설정 파일(.env/환경변수) 정리
+- 웹소켓 실시간 구독 래퍼 추가
+

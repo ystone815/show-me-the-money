@@ -1,0 +1,7 @@
+set root=C:\ProgramData\Anaconda3
+call %root%\Scripts\activate.bat %root% 
+REM call conda env list 
+call conda activate py36_32
+call cd c:/PySrc/Kiwoom
+call python Kiwoom_ystone.py
+pause

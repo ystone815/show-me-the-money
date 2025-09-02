@@ -1,0 +1,34 @@
+랜덤복기개수 50 
+복기날짜 20250214 
+CHECK_BOX 이평선 0 
+CHECK_BOX 볼밴 0 
+CHECK_BOX 박스권 0 
+CHECK_BOX 고점대비 0 
+CHECK_BOX 고점후저점 0 
+CHECK_BOX 평균가 0 
+CHECK_BOX 파바박 0 
+CHECK_BOX SuperTrend 0 
+CHECK_BOX_SUB 누적거래대금 0 
+CHECK_BOX_SUB 구간거래대금 2 
+CHECK_BOX_SUB 구간거래량증가 2 
+CHECK_BOX_SUB 순대금 0 
+CHECK_BOX_SUB 매수매도대금 2 
+CHECK_BOX_SUB 파바박대금 0 
+CHECK_BOX_SUB 구간파바박개수 0 
+CHECK_BOX_SUB 매수매도파바박개수 2 
+CHECK_BOX_SUB 순매수율 0 
+CHECK_BOX_SUB 순매수율누적 0 
+CHECK_BOX_SUB 구간회전율 0 
+CHECK_BOX_SUB 순회전율 0 
+CHECK_BOX_SUB 구간평균가등락율 0 
+CHECK_BOX_SUB 순장악력 0 
+CHECK_BOX_SUB 매수매도파워 0 
+CHECK_BOX_SUB 순매수파워 0 
+CHECK_BOX_SUB 구간순매수파워 0 
+CHECK_BOX_SUB 순형님대금 0 
+CHECK_BOX_SUB 호가대금 2 
+CHECK_BOX_SUB 가격변동율 0 
+CHECK_BOX_SUB 순대금변동 0 
+CHECK_BOX_SUB 순거래량박스권 0 
+CHECK_BOX_SUB 가격박스권 0 
+TABLE_COMBO_INDEX 0 1 
